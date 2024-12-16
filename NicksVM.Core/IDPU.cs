@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace NicksVM.Core;
 
 public class IDPU(VirtualMachine vm) : IPU
@@ -19,6 +21,13 @@ public class IDPU(VirtualMachine vm) : IPU
     vm => { vm.cpu.C = vm.idpu.InstructionPointer; },
     vm => { vm.cpu.MDR = vm.idpu.InstructionPointer; },
   ];
+
+  public static string[] Mnemonics { get; } =
+  [
+    "ldip A", "ldip B", "ldip C", "ldip MDR", "ldip DR",
+    "stip A", "stip B", "stip C", "stip MDR",
+  ];
+
   public bool Cycle()
   {
     if (vm.iopu.FCR != 0) return false;
@@ -56,8 +65,26 @@ public class IDPU(VirtualMachine vm) : IPU
       return false;
     }
 
-    executingUnit.Instructions[iid](vm);
     InstructionPointer += 2;
+    executingUnit.Instructions[iid](vm);
     return true;
+  }
+
+  public uint ReadNext32()
+  {
+    uint result = vm.memory.Read32(vm.mpu.ProgramOffset + InstructionPointer);
+    InstructionPointer += 4;
+    return result;
+  }
+  public ushort ReadNext16()
+  {
+    ushort result = vm.memory.Read16(vm.mpu.ProgramOffset + InstructionPointer);
+    InstructionPointer += 2;
+    return result;
+  }
+  public byte ReadNext8() {
+    byte result = vm.memory.Read8(vm.mpu.ProgramOffset + InstructionPointer);
+    InstructionPointer++;
+    return result;
   }
 }

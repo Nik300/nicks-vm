@@ -12,7 +12,7 @@ public partial class IOPU(VirtualMachine virtualMachine)
     get => 0;
     set
     {
-      var output = _vm.memory.ReadString(value);
+      var output = _vm.memory.ReadString(_vm.mpu.DataOffset + value);
       Console.WriteLine(output);
     }
   }

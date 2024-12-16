@@ -96,4 +96,23 @@ public partial class MPU : IPU
     vm => { vm.mpu.DR = vm.cpu.MDR; },
     vm => { vm.mpu.DR = vm.mpu.DR; },
   ];
+
+  public static string[] Mnemonics { get; } =
+  [
+    "ldprog A, B", "ldprog A, C", "ldprog A, MDR", "ldprog A, DR",
+    "ldprog B, A", "ldprog B, C", "ldprog B, MDR", "ldprog B, DR",
+    "ldprog C, A", "ldprog C, B", "ldprog C, MDR", "ldprog C, DR",
+    "ldprog MDR, A", "ldprog MDR, B", "ldprog MDR, C", "ldprog MDR, DR",
+    "ldprog DR, A", "ldprog DR, B", "ldprog DR, C", "ldprog DR, MDR",
+    "ldsp A", "ldsp B", "ldsp C", "ldsp MDR", "ldsp DR",
+    "stsp A", "stsp B", "stsp C", "stsp MDR", "stsp DR",
+    "ldbp A", "ldbp B", "ldbp C", "ldbp MDR", "ldbp DR",
+    "stbp A", "stbp B", "stbp C", "stbp MDR", "stbp DR",
+    "ldlsp A", "ldlsp B", "ldlsp C", "ldlsp MDR", "ldlsp DR",
+    "stlsp A", "stlsp B", "stlsp C", "stlsp MDR", "stlsp DR",
+    "ldlbp A", "ldlbp B", "ldlbp C", "ldlbp MDR", "ldlbp DR",
+    "stlbp A", "stlbp B", "stlbp C", "stlbp MDR", "stlbp DR",
+    "ulkb A", "ulkb B", "ulkb C", "ulkb MDR", "ulkb DR",
+    "drch A", "drch B", "drch C", "drch MDR", "drch DR"
+  ];
 }

@@ -143,7 +143,7 @@ public partial class CPU : IPU
     (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0x00FFFFFF) | ((uint)vm.mpu.DRHH << 24); }, // CHH
     // lddr8 XLX
     (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0xFFFFFF00) | vm.mpu.DRLL; },              // ALL
-    (VirtualMachine vm) => { Console.WriteLine("executing"); vm.cpu.A = (vm.cpu.A & 0xFFFF00FF) | ((uint)vm.mpu.DRHH << 8); }, // ALH
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0xFFFF00FF) | ((uint)vm.mpu.DRHH << 8); }, // ALH
     (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0xFFFFFF00) | vm.mpu.DRLL; },              // BLL
     (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0x00FF00FF) | ((uint)vm.mpu.DRHH << 8); }, // BLH
     (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0xFFFFFF00) | vm.mpu.DRLL; },              // CLL
@@ -178,5 +178,70 @@ public partial class CPU : IPU
     (VirtualMachine vm) => { vm.cpu.MDRHH = (byte)((vm.cpu.B & 0x0000FF00) >> 8); }, // st8 BLH
     (VirtualMachine vm) => { vm.cpu.MDRHL = (byte)(vm.cpu.C & 0x000000FF); },        // st8 CLL
     (VirtualMachine vm) => { vm.cpu.MDRHH = (byte)((vm.cpu.C & 0x0000FF00) >> 8); }, // st8 CLH
+
+    // ldimm32 X
+    (VirtualMachine vm) => { vm.cpu.A = vm.idpu.ReadNext32(); }, // A
+    (VirtualMachine vm) => { vm.cpu.B = vm.idpu.ReadNext32(); }, // B
+    (VirtualMachine vm) => { vm.cpu.C = vm.idpu.ReadNext32(); }, // C
+
+    // ldimm16 XL
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0xFFFF0000) | vm.idpu.ReadNext16(); }, // AL
+    (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0xFFFF0000) | vm.idpu.ReadNext16(); }, // BL
+    (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0xFFFF0000) | vm.idpu.ReadNext16(); }, // CL
+    // ldimm16 XH
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0x0000FFFF) | (uint)vm.idpu.ReadNext16() << 16; }, // AH
+    (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0x0000FFFF) | (uint)vm.idpu.ReadNext16() << 16; }, // BH
+    (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0x0000FFFF) | (uint)vm.idpu.ReadNext16() << 16; }, // CH
+
+    // ldimm8 XHX
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0xFF00FFFF) | ((uint)vm.idpu.ReadNext8() << 16); }, // AHL
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0x00FFFFFF) | ((uint)vm.idpu.ReadNext8() << 24); }, // AHH
+    (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0xFF00FFFF) | ((uint)vm.idpu.ReadNext8() << 16); }, // BHL
+    (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0x00FFFFFF) | ((uint)vm.idpu.ReadNext8() << 24); }, // BHH
+    (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0xFF00FFFF) | ((uint)vm.idpu.ReadNext8() << 16); }, // CHL
+    (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0x00FFFFFF) | ((uint)vm.idpu.ReadNext8() << 24); }, // CHH
+    // ldimm8 XLX
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0xFFFFFF00) | vm.idpu.ReadNext8(); },              // ALL
+    (VirtualMachine vm) => { vm.cpu.A = (vm.cpu.A & 0xFFFF00FF) | ((uint)vm.idpu.ReadNext8() << 8); }, // ALH
+    (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0xFFFFFF00) | vm.idpu.ReadNext8(); },              // BLL
+    (VirtualMachine vm) => { vm.cpu.B = (vm.cpu.B & 0x00FF00FF) | ((uint)vm.idpu.ReadNext8() << 8); }, // BLH
+    (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0xFFFFFF00) | vm.idpu.ReadNext8(); },              // CLL
+    (VirtualMachine vm) => { vm.cpu.C = (vm.cpu.C & 0x00FF00FF) | ((uint)vm.idpu.ReadNext8() << 8); }, // CLH
+  ];
+
+  public static string[] Mnemonics { get; } =
+  [
+    "nop",
+    "move A, B", "move B, A", "move A, C", "move C, A", "move B, C", "move C, B",
+    "lddr A", "lddr B", "lddr C",
+    "ld A", "ld B", "ld C",
+    "st A", "st B", "st C",
+    "ch A", "ch B", "ch C",
+    "chdr", "chld",
+    "move16 A >> 16", "move16 A << 16", "move16 B >> 16", "move16 B << 16", "move16 C >> 16", "move16 C << 16",
+    "move16 B, A", "move16 A, B", "move16 C, A", "move16 A, C", "move16 C, B", "move16 B, C",
+    "lddr16 A", "lddr16 A", "lddr16 B", "lddr16 B", "lddr16 C", "lddr16 C",
+    "ld16 A", "ld16 A", "ld16 B", "ld16 B", "ld16 C", "ld16 C",
+    "st16 A", "st16 A", "st16 B", "st16 B", "st16 C", "st16 C",
+    "move8 A", "move8 A", "move8 A", "move8 A", "move8 A", "move8 A", "move8 A", "move8 A",
+    "move8 B", "move8 B", "move8 B", "move8 B", "move8 B", "move8 B", "move8 B", "move8 B",
+    "move8 C", "move8 C", "move8 C", "move8 C", "move8 C", "move8 C", "move8 C", "move8 C",
+    "move8 AHX -> BHL", "move8 AHX -> BHH", "move8 AHX -> CHL", "move8 AHX -> CHH",
+    "move8 ALX -> BLL", "move8 ALX -> BLH", "move8 ALX -> CLL", "move8 ALX -> CLH",
+    "move8 BHX -> AHL", "move8 BHX -> AHH", "move8 BHX -> CHL", "move8 BHX -> CHH",
+    "move8 BLX -> ALL", "move8 BLX -> ALH", "move8 BLX -> CLL", "move8 BLX -> CLH",
+    "move8 CHX -> AHL", "move8 CHX -> AHH", "move8 CHX -> BHL", "move8 CHX -> BHH",
+    "move8 CLX -> ALL", "move8 CLX -> ALH", "move8 CLX -> BLL", "move8 CLX -> BLH",
+    "lddr8 AHL", "lddr8 AHH", "lddr8 BHL", "lddr8 BHH", "lddr8 CHL", "lddr8 CHH",
+    "lddr8 ALL", "lddr8 ALH", "lddr8 BLL", "lddr8 BLH", "lddr8 CLL", "lddr8 CLH",
+    "ld8 AHL", "ld8 AHH", "ld8 BHL", "ld8 BHH", "ld8 CHL", "ld8 CHH",
+    "ld8 ALL", "ld8 ALH", "ld8 BLL", "ld8 BLH", "ld8 CLL", "ld8 CLH",
+    "st8 AHL", "st8 AHH", "st8 BHL", "st8 BHH", "st8 CHL", "st8 CHH",
+    "st8 ALL", "st8 ALH", "st8 BLL", "st8 BLH", "st8 CLL", "st8 CLH",
+    "ldimm32 A", "ldimm32 B", "ldimm32 C",
+    "ldimm16 AL", "ldimm16 BL", "ldimm16 CL",
+    "ldimm16 AH", "ldimm16 BH", "ldimm16 CH",
+    "ldimm8 AHL", "ldimm8 AHH", "ldimm8 BHL", "ldimm8 BHH", "ldimm8 CHL", "ldimm8 CHH",
+    "ldimm8 ALL", "ldimm8 ALH", "ldimm8 BLL", "ldimm8 BLH", "ldimm8 CLL", "ldimm8 CLH"
   ];
 }

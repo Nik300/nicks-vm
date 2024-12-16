@@ -128,4 +128,18 @@ public partial class IOPU : IPU
     vm => { vm.cpu.B = (vm.cpu.B & 0xFFFF00FF) | (uint)vm.iopu.FCR << 8; },
     vm => { vm.cpu.C = (vm.cpu.C & 0xFFFF00FF) | (uint)vm.iopu.FCR << 8; },
   ];
+
+  public static string[] Mnemonics { get; } =
+  [
+    "ldktp A", "ldktp B", "ldktp C", "ldktp MDR", "ldktp DR",
+    "stksr AH", "stksr BH", "stksr CH", "stksr AL", "stksr BL", "stksr CL", "stksr MDRH", "stksr MDRL",
+    "ldcop A", "ldcop B", "ldcop C", "ldcop MDR", "ldcop DR", "stcop A", "stcop B", "stcop C", "stcop MDR",
+    "ldcoc AHL", "ldcoc BHL", "ldcoc CHL", "ldcoc ALL", "ldcoc BLL", "ldcoc CLL", "ldcoc AHH", "ldcoc BHH", "ldcoc CHH", "ldcoc ALH", "ldcoc BLH", "ldcoc CLH",
+    "ldccl A", "ldccl B", "ldccl C", "ldccl MDR", "ldccl DR", "stccl A", "stccl B", "stccl C", "stccl MDR",
+    "ldcct A", "ldcct B", "ldcct C", "ldcct MDR", "ldcct DR", "stcct A", "stcct B", "stcct C", "stcct MDR",
+    "stcsr A", "stcsr B", "stcsr C", "stcsr MDR",
+    "ldgcr A", "ldgcr B", "ldgcr C", "ldgcr MDR", "ldgcr DR", "stgdr A", "stgdr B", "stgdr C", "stgdr MDR",
+    "ldfcr AHL", "ldfcr BHL", "ldfcr CHL", "ldfcr ALL", "ldfcr BLL", "ldfcr CLL", "ldfcr AHH", "ldfcr BHH", "ldfcr CHH", "ldfcr ALH", "ldfcr BLH", "ldfcr CLH",
+    "stfcr AHL", "stfcr BHL", "stfcr CHL", "stfcr ALL", "stfcr BLL", "stfcr CLL", "stfcr AHH", "stfcr BHH", "stfcr CHH", "stfcr ALH", "stfcr BLH", "stfcr CLH"
+  ];
 }
